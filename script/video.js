@@ -49,12 +49,20 @@ const displayVideos = (videos) => {
     <img
       src=${video.thumbnail} class="w-full h-full object-cover" />
   </figure>
-  <div class="card-body">
-    <h2 class="card-title">Shoes!</h2>
-    <p>If a dog chews shoes whose shoes does he choose?</p>
-    <div class="card-actions justify-end">
-      <button class="btn btn-primary">Buy Now</button>
+  <div class="px-0 py-2 flex gap-3  ">
+    <div class="w-10 h-10 ">
+    <img class=" w-full h-full rounded-full object-cover " src="${video.authors[0].profile_picture}"/>
     </div>
+    <div>
+    <h3 class="font-bold">${video.title}</h3>
+    <div class="flex gap-4 items-center">
+    <p>${video.authors[0].profile_name}</p>
+    <p><img class="w-8 " src="https://img.icons8.com/?size=96&id=98A4yZTt9abw&format=png"/></p>
+    </div>
+    <p>${video.others.views} </p>
+    </div>
+
+    
   </div>
 
     `
