@@ -1,3 +1,13 @@
+function getTimeString(time) {
+  const month = parseInt(time / (86400 * 30));
+  const year = parseInt(time/(86400*365));
+  const hour = parseInt(time / 3600);
+    let second = parseInt(time % 3600);
+    const minute =parseInt(second / 60);
+  second = second % 60;
+  return (`${year} year ${month} month,${hour} hour ${minute} minute ${second} second ago`)
+}
+
 // get fetch, load and categories 
 const loadCategories = () => {
   fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
@@ -6,6 +16,13 @@ const loadCategories = () => {
     .catch(error => console.log(error));
 };
 
+const loadCategoriesVideo = (id) => {
+  alert(id);
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    .then(res => res.json())
+    .then(data => displayVideos(data.category))
+  .catch(error=>console.log(error))
+}
 
 // const carDemo = {
 // {
@@ -38,16 +55,21 @@ const loadVideo = () => {
 // get displayVideos function
 const displayVideos = (videos) => {
 
-  const videoContainer=document.getElementById('video-container')
+  const videoContainer = document.getElementById('video-container');
+  videoContainer.innerHTML = "";
   videos.forEach(video => {
     console.log(video)
     const div = document.createElement('div');
     div.classList = "card card-compact";
+    
+  
     div.innerHTML =
      `
-      <figure class=" h-[200px]">
+      <figure class=" h-[200px] relative">
     <img
       src=${video.thumbnail} class="w-full h-full object-cover" />
+      ${video.others.posted_date?.length===0?"":` <span class="absolute right-2 bottom-2 bg-black rounded p-1 text-white text-[8px]">${getTimeString(video.others.posted_date)}</span>`}
+     
   </figure>
   <div class="px-0 py-2 flex gap-3  ">
     <div class="w-10 h-10 ">
@@ -56,10 +78,10 @@ const displayVideos = (videos) => {
     <div>
     <h3 class="font-bold">${video.title}</h3>
     <div class="flex gap-4 items-center">
-    <p>${video.authors[0].profile_name}</p>
-    <p><img class="w-8 " src="https://img.icons8.com/?size=96&id=98A4yZTt9abw&format=png"/></p>
+    <p class="text-gray-400">${video.authors[0].profile_name}</p>
+   ${video.authors[0].verified===true? `<p><img class="w-8 " src="https://img.icons8.com/?size=96&id=98A4yZTt9abw&format=png"/></p>`:""}
     </div>
-    <p>${video.others.views} </p>
+    <p class="text-gray-400">${video.others.views} </p>
     </div>
 
     
@@ -76,13 +98,18 @@ const displayCategories = (categories) => {
  categories.forEach((item) => {
    console.log(item)
    //  create button
-   const button = document.createElement('button');
-   button.classList = "btn";
-   button.innerText = item.category;
-  
+   const buttonContainer = document.createElement('div');
+  //  button.classList = "btn";
+  //  button.innerText = item.category;
+   // button.onclick=alert("hello")
+   buttonContainer.innerHTML =
+     `
+     <button  onclick="loadCategoriesVideo(${item.category_id})" class="btn">${item.category}</button>
+     `
+    
 
    //  push button inside the categories nav
-   categoryContainer.append(button);
+   categoryContainer.append(buttonContainer);
 
 
  });
